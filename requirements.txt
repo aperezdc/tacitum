@@ -1,0 +1,10 @@
+hipack>=12
+lasso>=0.1.0-alpha.3
+pystache
+muffin
+muffin-session
+pyotp
+pyqrcode
+pypng
+passgen
+indicium-git
