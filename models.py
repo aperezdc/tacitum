@@ -25,9 +25,10 @@ class User(lasso.Schemed):
         "username": Username,
         "password": Password,
         "totp_key": OTPKey,
+        "groups"  : lasso.And([Username], lasso.Use(set)),
     }
 
-    def __init__(self, username, password=None, name=None, totp_key=None):
+    def __init__(self, username, password=None, name=None, totp_key=None, groups=()):
         if name is None:
             name = username
         if password is None:
@@ -35,7 +36,7 @@ class User(lasso.Schemed):
         if totp_key is None:
             totp_key = pyotp.random_base32()
         super(User, self).__init__(username=username, password=password,
-                name=name, totp_key=totp_key)
+                name=name, totp_key=totp_key, groups=groups)
 
     def __repr__(self):
         return "{!s}({!r})".format(self.__class__.__name__, self.username)
