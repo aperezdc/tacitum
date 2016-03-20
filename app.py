@@ -57,8 +57,21 @@ def logout(request):
     yield from app.ps.session.logout(request)
     return muffin.HTTPFound("/")
 
+
 @app.register("/")
 @app.ps.session.user_pass()
 def index(request):
     return app.ps.pystache.render("dashboard", title="Dashboard",
             user=request.user)
+
+
+@app.register("/qr/totp.png")
+@app.ps.session.user_pass()
+def qr_totp_png(request):
+    # FIXME: Potentially slow.
+    import pyqrcode
+    from io import BytesIO
+    code = pyqrcode.create(request.user.totp_uri())
+    data = BytesIO()
+    code.png(data, scale=8)
+    return muffin.Response(content_type="image/png", body=data.getvalue())
