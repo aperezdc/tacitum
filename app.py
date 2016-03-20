@@ -17,6 +17,7 @@ app = muffin.Application("tacitum",
         PLUGINS = ("muffin_session", "muffin_pystache"),
         SESSION_LOGIN_URL = "/login",
         SESSION_SECRET = passgen(),
+        STATIC_FOLDERS = P.join(P.dirname(__file__), "static"),
         PYSTACHE_PATH = P.join(P.dirname(__file__), "templates"),
         PYSTACHE_LAYOUT = "layout",
     )
