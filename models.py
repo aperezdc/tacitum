@@ -9,10 +9,14 @@
 import lasso, pyotp, passgen
 
 
-Username = lasso.StringMatch(r"^[a-zA-Z][a-zA-Z0-9_\.]+$")
-Password = lasso.And(str, lambda l: len(l) >= 8)
-OTPToken = lasso.And(str, lambda l: len(l) == 6)
-OTPKey   = lasso.And(str, lambda l: len(l) == 16)
+Username = lasso.StringMatch(r"^[a-zA-Z][a-zA-Z0-9_\.]+$",
+        error="Invalid username")
+Password = lasso.And(str, lambda l: len(l) >= 8,
+        error="Password must be at least 8 chracters")
+OTPToken = lasso.And(str, lambda l: len(l) == 6,
+        error="Invalid OTP token")
+OTPKey = lasso.And(str, lambda l: len(l) == 16,
+        error="Invalid OTP key")
 
 
 class User(lasso.Schemed):
@@ -43,8 +47,25 @@ class User(lasso.Schemed):
         return pyotp.TOTP(self.totp_key).provisioning_uri(self.username, issuer)
 
 
-login_form = lasso.Schema({
-    "username": Username,
-    "password": Password,
-    "otptoken": OTPToken,
-})
+
+class Formed(lasso.Schemed):
+    @classmethod
+    def from_form(cls, data):
+        d = {}
+        # XXX: _schema is an implementation detail :|
+        for k in cls.__schema__._schema.keys():
+            if k in data:
+                d[k] = data[k]
+
+        try:
+            return cls.validate(d), None
+        except lasso.SchemaError as e:
+            return None, e.message
+
+
+class LoginForm(Formed):
+    __schema__ = {
+        "username": Username,
+        "password": Password,
+        "otptoken": OTPToken,
+    }
