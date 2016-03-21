@@ -1,4 +1,4 @@
-hipack>=12
+hipack>=13
 lasso>=0.1.0-alpha.3
 pystache
 muffin
