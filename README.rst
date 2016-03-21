@@ -24,7 +24,7 @@ Users have to be created manually, fire up the ``python`` interpreter and do:
 
     import store, models
     s = store.TacitumStore("data")
-    s.put("/user", models.User("jdoe", name="John Doe")
+    s.put("/user", models.User("jdoe", name="John Doe"))
     s.commit("Added user jdoe")
 
 This will create the plain text file ``data/user/jdoe.hipack`` (actually, it
