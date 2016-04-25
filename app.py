@@ -24,6 +24,11 @@ app = muffin.Application("tacitum",
 
 store = TacitumStore("data")
 
+from aiomanhole import start_manhole
+app.register_on_start(lambda _: start_manhole(
+        banner="<<< Tacitum >>>\n", path="/tmp/tacitum.manhole",
+        namespace={"app": app, "store": store, "models": models}))
+
 
 @app.ps.session.user_loader
 def get_user(uid):
